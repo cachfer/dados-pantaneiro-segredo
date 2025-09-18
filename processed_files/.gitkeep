@@ -1,0 +1,2 @@
+# This file ensures the processed_files directory is tracked by git
+# while ignoring its contents (processed CSV files)

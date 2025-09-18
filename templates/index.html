@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Data Analysis @ Horeb Energy Formula UFMG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        /* Modern CSS Variables */
+        :root {
+            --primary-color: #1d6c69;
+            --primary-dark: #15524e;
+            --secondary-color: #024846;
+            --accent-blue: #0b0080;
+            --accent-purple: #000125;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --surface-bg: #252525;
+            --border-color: #333;
+            --border-light: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #6c757d;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 16px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-header: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Combined Header and Navigation Layout */
+        .header-nav-container {
+            background: var(--gradient-header);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-nav-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.3" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .compact-header {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .header-content-inline {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon-inline {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .header-icon-inline img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .header-text h1 {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            margin: 0.2rem 0 0 0;
+            opacity: 0.9;
+            font-weight: 300;
+            color: white;
+        }
+
+        .nav-container {
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        /* Enhanced Tabs for Inline Layout */
+        .nav-tabs {
+            border: none;
+            margin-bottom: 0;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: var(--border-radius-md);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            flex-wrap: nowrap;
+        }
+
+        .nav-tabs .nav-link {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius-sm);
+            padding: 0.5rem 0.8rem;
+            font-weight: 500;
+            font-size: 0.8rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Enhanced Container Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            gap: 2rem;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        /* Enhanced Cards */
+        .modern-card {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-md);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modern-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .modern-card-header {
+            background: var(--gradient-primary);
+            padding: 1rem 1.25rem;
+            border: none;
+            position: relative;
+        }
+
+        .modern-card-header h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modern-card-body {
+            padding: 1.25rem;
+            background: var(--surface-bg);
+        }
+
+        /* Enhanced Form Controls */
+        .form-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            transition: var(--transition-smooth);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--card-bg);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(53, 187, 182, 0.1);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .form-text {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Modern Buttons */
+        .btn {
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            transition: var(--transition-smooth);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: #212529;
+        }
+
+        /* Enhanced Tabs */
+        .nav-tabs {
+            border: none;
+            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: var(--border-radius-md);
+        }
+
+        .nav-tabs .nav-link {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 0.6rem 1rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--surface-bg);
+            color: var(--primary-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-content {
+            background: transparent;
+        }
+
+        .tab-pane {
+            background: var(--surface-bg);
+            border-radius: var(--border-radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        /* Enhanced Plot Container */
+        .plot-container {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 2rem;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .plot-container:hover {
+            border-color: var(--primary-color);
+        }
+
+        .plot-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .plot-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Enhanced Progress Bar */
+        .progress {
+            background: var(--surface-bg);
+            border-radius: var(--border-radius-sm);
+            height: 0.75rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-sm);
+            transition: width 0.6s ease;
+        }
+
+        /* Enhanced Alerts */
+        .alert {
+            border: none;
+            border-radius: var(--border-radius-md);
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border-left-color: #28a745;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border-left-color: #dc3545;
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border-left-color: #ffc107;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+            border-left-color: #17a2b8;
+        }
+
+        /* Enhanced Statistics Cards */
+        .stat-card {
+            background: var(--surface-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-md);
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        /* Enhanced Modal */
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Enhanced Range Slider */
+        .form-range {
+            background: var(--surface-bg);
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--primary-color);
+            border: 2px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Enhanced Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface-bg);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+            border: 2px solid var(--surface-bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .header-nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-content-inline {
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-nav-container {
+                padding: 1rem;
+            }
+            
+            .header-content-inline {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .header-text h1 {
+                font-size: 1.2rem;
+                text-align: center;
+            }
+            
+            .header-text p {
+                font-size: 0.75rem;
+                text-align: center;
+            }
+            
+            .main-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .nav-tabs .nav-link {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+
+        /* Enhanced Input Group */
+        .input-group-text {
+            background: var(--surface-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* File Upload Enhancement */
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            background: var(--card-bg);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: var(--surface-bg);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(53, 187, 182, 0.1);
+        }
+
+        /* Enhanced Table Styles */
+        .table {
+            color: var(--text-primary);
+            background: var(--surface-bg);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background: var(--card-bg);
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Utility Classes */
+        .glassmorphism {
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Combined Header and Navigation -->
+    <div class="container-fluid">
+        <div class="header-nav-container">
+            <!-- Compact Header -->
+            <div class="compact-header">
+                <div class="header-content-inline">
+                    <div class="header-icon-inline">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Horeb Energy Formula UFMG Logo" class="logo-img" id="logoImg">
+                    </div>
+                    <div class="header-text">
+                        <h1>Data Analysis @ Horeb Energy Formula UFMG</h1>
+                    <p>Welcome to the Data Analysis tool developed at Horeb Energy Formula UFMG.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inline Navigation -->
+            <div class="nav-container">
+                <div class="d-flex align-items-center gap-3">
+                    <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="visualization-tab" data-bs-toggle="tab" data-bs-target="#visualization" type="button" role="tab">
+                            📈 Visualization
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="track-tab" data-bs-toggle="tab" data-bs-target="#track" type="button" role="tab">
+                            🗺️ Track Analysis
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                            📊 Data Overview
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics" type="button" role="tab">
+                            📊 Statistics
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="export-tab" data-bs-toggle="tab" data-bs-target="#export" type="button" role="tab">
+                            💾 Export
+                        </button>
+                    </li>
+                </ul>
+                    <a href="/logout" class="btn btn-outline-light btn-sm px-2 py-1" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-container">
+        <div class="row">
+            <!-- Enhanced Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <h4 class="sidebar-title">
+                        📊 Data Management
+                    </h4>
+                    
+                    <!-- File Upload Section -->
+                    <div class="modern-card">
+                        <div class="modern-card-header">
+                            <h5>⬆️ Process Raw File</h5>
+                        </div>
+                        <div class="modern-card-body">
+                            <div class="mb-3">
+                                <label for="fileInput" class="form-label">
+                                    📄 Upload Raw CSV File
+                                </label>
+                                <input type="file" class="form-control" id="fileInput" accept=".csv">
+                                <div class="form-text">Upload a raw CSV file from FTManager</div>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" id="processBtn">
+                                ⚙️ Process File
+                            </button>
+                            <div id="processProgress" class="mt-3" style="display: none;">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-label="File processing progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div id="processStatus" class="mt-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Selection Section -->
+                    <div class="modern-card">
+                        <div class="modern-card-header">
+                            <h5>📂 Load Processed Files</h5>
+                        </div>
+                        <div class="modern-card-body">
+                            <div class="mb-3">
+                                <label for="fileSelect" class="form-label">
+                                    📋 Select processed files
+                                </label>
+                                <select class="form-select" id="fileSelect" multiple size="4">
+                                    <option value="">No files available</option>
+                                </select>
+                                <div class="form-text">Choose files to compare data between different logs</div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary w-100" id="loadBtn">
+                                ⬇️ Load Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data Info -->
+                    <div class="modern-card" id="dataInfo" style="display: none;">
+                        <div class="modern-card-header">
+                            <h5>ℹ️ Data Information</h5>
+                        </div>
+                        <div class="modern-card-body">
+                            <div id="dataInfoContent"></div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Controls -->
+                    <div class="modern-card" id="analysisControls" style="display: none;">
+                        <div class="modern-card-header">
+                            <h5>🎛️ Analysis Controls</h5>
+                        </div>
+                        <div class="modern-card-body">
+                            <div class="mb-3">
+                                <label for="plotTypeSelect" class="form-label">
+                                    📈 Plot Type
+                                </label>
+                                <select class="form-select" id="plotTypeSelect">
+                                    <option value="Line Plot">Line Plot</option>
+                                    <option value="Scatter Plot">Scatter Plot</option>
+                                    <option value="Histogram">Histogram</option>
+                                    <option value="Box Plot">Box Plot</option>
+                                    <option value="Correlation Matrix">Correlation Matrix</option>
+                                </select>
+                </div>
+                            <div class="mb-3" id="xAxisControl">
+                                <label for="xAxisSelect" class="form-label">
+                                    ↔️ X-Axis
+                                </label>
+                                <select class="form-select" id="xAxisSelect">
+                                    <option value="">Select X-axis</option>
+                                </select>
+            </div>
+                            <div class="mb-3">
+                                <label for="yAxisSelect" class="form-label">
+                                    ↕️ Y-Axis Parameter(s)
+                                </label>
+                                <select class="form-select" id="yAxisSelect" multiple size="3">
+                                    <option value="">Select Y-axis parameters</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="colorAxisControl">
+                                <label for="colorAxisSelect" class="form-label">
+                                    🎨 Color By (optional)
+                                </label>
+                                <select class="form-select" id="colorAxisSelect">
+                                    <option value="None">None</option>
+                                        </select>
+                                    </div>
+                            <button type="button" class="btn btn-primary w-100" id="updatePlotBtn">
+                                🔄 Update Plot
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lap Detection -->
+                    <div class="modern-card" id="lapDetection" style="display: none;">
+                        <div class="modern-card-header">
+                            <h5>🏁 Lap Detection</h5>
+                                    </div>
+                        <div class="modern-card-body">
+                            <div class="mb-3">
+                                <label for="lapLengthInput" class="form-label">
+                                    📏 Estimated lap length (meters)
+                                </label>
+                                <input type="number" class="form-control" id="lapLengthInput" min="100" step="50" value="1500">
+                                    </div>
+                            <div class="mb-3">
+                                <label for="detectionTolerance" class="form-label">
+                                    🎯 Detection tolerance
+                                </label>
+                                <input type="range" class="form-range" id="detectionTolerance" min="5" max="30" value="15">
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">5%</small>
+                                    <small id="toleranceValue" class="text-primary">15%</small>
+                                    <small class="text-muted">30%</small>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success w-100" id="detectLapsBtn">
+                                🔍 Detect Laps
+                                </button>
+                            <div id="lapDetectionResults" class="mt-3" style="display: none;">
+                                <div class="alert alert-success">
+                                    <div id="lapDetectionStatus"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Main Content Area -->
+            <div class="col-lg-9">
+                <div class="main-content">
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="mainTabsContent">
+                        <!-- Visualization Tab -->
+                        <div class="tab-pane fade show active" id="visualization" role="tabpanel">
+                            <div id="plotContainer" class="plot-container">
+                                <div class="plot-placeholder">
+                                    📈
+                                    <h5>Data Visualization</h5>
+                                    <p>Load data and use the sidebar controls to create visualizations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Track Analysis Tab -->
+                    <div class="tab-pane fade" id="track" role="tabpanel">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label for="trackParameterSelect" class="form-label">
+                                        <i class="fas fa-sliders-h"></i>
+                                        Select Parameter
+                                    </label>
+                                        <select class="form-select" id="trackParameterSelect">
+                                            <option value="">Select a parameter</option>
+                                        </select>
+                                    </div>
+                                <div class="col-md-8">
+                                    <label for="trackTimeStart" class="form-label">
+                                        ⏰ Time Range (s)
+                                    </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="trackTimeStart" placeholder="Start" step="0.1">
+                                            <span class="input-group-text">to</span>
+                                            <input type="number" class="form-control" id="trackTimeEnd" placeholder="End" step="0.1">
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row mb-4">
+                                    <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary w-100" id="parameterMapBtn">
+                                        🗺️ Parameter Map
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <button type="button" class="btn btn-success w-100" id="behaviorMapBtn">
+                                        👤 Driver Behavior
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <button type="button" class="btn btn-warning w-100" id="speedZonesBtn">
+                                        ⚡ Speed Zones
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="trackPlotContainer" class="plot-container">
+                                <div class="plot-placeholder">
+                                    🗺️
+                                    <h5>Track Analysis</h5>
+                                        <p>Select analysis type to view track data</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Overview Tab -->
+                    <div class="tab-pane fade" id="overview" role="tabpanel">
+                            <div class="row mb-4">
+                                    <div class="col-md-6">
+                                    <label for="lapSelect" class="form-label">
+                                        🏁 Select Lap
+                                    </label>
+                                        <select class="form-select" id="lapSelect">
+                                            <option value="all">All Laps</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <label for="rowsPerPage" class="form-label">
+                                        📝 Rows per page
+                                    </label>
+                                        <select class="form-select" id="rowsPerPage">
+                                            <option value="50">50</option>
+                                            <option value="100" selected>100</option>
+                                            <option value="200">200</option>
+                                            <option value="500">500</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="dataTableContainer">
+                                <div class="plot-placeholder">
+                                    📊
+                                    <h5>Data Overview</h5>
+                                        <p>Load data to view the overview table</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Tab -->
+                    <div class="tab-pane fade" id="statistics" role="tabpanel">
+                            <div class="row mb-4">
+                                    <div class="col-md-6">
+                                    <label for="statsLapSelect" class="form-label">
+                                        🏁 Select Lap
+                                    </label>
+                                        <select class="form-select" id="statsLapSelect">
+                                            <option value="all">All Laps</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <label for="statsParameterSelect" class="form-label">
+                                        📊 Select Parameter
+                                    </label>
+                                        <select class="form-select" id="statsParameterSelect">
+                                            <option value="">Select a parameter</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <button type="button" class="btn btn-primary mb-4" id="generateStatsBtn">
+                                🧮 Generate Statistics
+                                </button>
+                                <div id="statisticsContainer">
+                                <div class="plot-placeholder">
+                                    📊
+                                    <h5>Statistics Analysis</h5>
+                                        <p>Select parameters and generate statistics</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Tab -->
+                    <div class="tab-pane fade" id="export" role="tabpanel">
+                            <div class="row g-4">
+                                    <div class="col-md-6">
+                                    <div class="modern-card h-100">
+                                        <div class="modern-card-body text-center">
+                                            📄
+                                            <h5>Export Data</h5>
+                                            <p class="text-muted">Download the processed data as CSV file</p>
+                                        <button type="button" class="btn btn-success" id="exportCsvBtn">
+                                                📄 Export CSV
+                                        </button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="modern-card h-100">
+                                        <div class="modern-card-body text-center">
+                                            📋
+                                            <h5>Export Analysis Report</h5>
+                                            <p class="text-muted">Generate and download analysis report</p>
+                                        <button type="button" class="btn btn-info" id="exportReportBtn">
+                                                📋 Export Report
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Loading Modal -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glassmorphism">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5 class="text-gradient">Processing Data</h5>
+                    <p class="mt-3 text-muted" id="loadingText">Please wait while we process your data...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Alert Container -->
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script>
+        // Simple logo error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoImg = document.getElementById('logoImg');
+            if (logoImg) {
+                logoImg.onerror = function() {
+                    const container = this.parentElement;
+                    if (container) {
+                        container.innerHTML = '🏎️';
+                        container.style.fontSize = '1.5rem';
+                        container.style.display = 'flex';
+                        container.style.alignItems = 'center';
+                        container.style.justifyContent = 'center';
+                    }
+                };
+            }
+        });
+    </script>
+</body>
+</html>

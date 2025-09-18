@@ -1,0 +1,9 @@
+Flask==2.2.5
+Flask-CORS==4.0.0
+pandas==1.5.3
+numpy==1.24.3
+plotly==5.15.0
+matplotlib==3.6.3
+seaborn==0.12.2
+openpyxl==3.1.2
+gunicorn==21.2.0

@@ -1,0 +1,192 @@
+# author: carolina ferrari
+# ================================================
+
+## LEGEND
+- SI: International System of Units
+- °: degrees
+- %: percentage
+- rpm: revolutions per minute
+- L: liters
+- lb/h: pounds per hour
+- bar: pressure unit (1 bar = 100 kPa)
+- psi: pounds per square inch (pressure unit)
+- V: volts
+- A: amperes
+- Ω: ohms
+- Hz: hertz
+- N: newtons
+- J: joules
+- W: watts
+- HP: horsepower
+- Pa: pascals
+- kg: kilograms
+- m: meters
+- s: seconds
+- rad: radians
+- lambda: air-fuel ratio (dimensionless)
+- count: counting number (dimensionless)
+- on/off: binary state
+
+## IMPORTED VARIABLES (Raw Data from FTManager)
+These are the units of data as received from the data acquisition system:
+
+### Time and Engine
+- time: s (Time in seconds)
+- rpm: rpm (Engine RPM)
+- tps: % (Throttle position sensor percentage)
+- engine_temperature: °C (Engine temperature in Celsius)
+- oil_pressure: bar (Oil pressure in bar)
+- oil_temperature: °C (Oil temperature in Celsius)
+
+### Fuel System
+- fuel_flow: lb/h (Fuel flow rate in pounds per hour)
+
+### Electrical System
+- battery_voltage: V (Battery voltage in volts)
+
+### Clutch and Brakes
+- clutch_pressure: psi (Clutch pressure in psi)
+- brake_pressure_front: psi (Front brake pressure in psi)
+- brake_pressure_rear: psi (Rear brake pressure in psi)
+
+### Transmission
+- gear: count (Gear number)
+
+### Vehicle Motion
+- traction_speed: km/h (Vehicle speed in kilometers per hour)
+- G_longitudinal: g (Longitudinal acceleration in g-forces)
+- G_lateral: g (Lateral acceleration in g-forces)
+
+### Engine Management
+- general_probe: lambda (General lambda probe reading)
+- mesh_target: lambda (Lambda target value)
+
+### Steering
+- wps: deg (Wheel position sensor in degrees)
+
+### Suspension
+- FL_Damper: mm (Front left damper position)
+- FR_Damper: mm (Front right damper position)
+- RL_Damper: mm (Rear left damper position)
+- RR_Damper: mm (Rear right damper position)
+
+### Engine Features
+- 2step: on/off (2-step activation)
+
+## EXPORTED VARIABLES (Calculated Results)
+These are the units of all calculated variables output by the mathematical channel:
+
+### Vehicle Dynamics
+- R: m (Turning radius in meters)
+- curvature: 1/m (Curvature in inverse meters)
+- delta_acker: deg (Ackermann angle in degrees)
+- understeer_gradient: deg/g (Understeer gradient in degrees per g)
+- yaw_rate: rad/s (Yaw rate in radians per second)
+- distance: m (Distance traveled in meters)
+- steering_angle: deg (Steering wheel angle in degrees)
+
+### Forces and Aerodynamics
+- downforce: N (Downforce in Newtons)
+- drag: N (Drag force in Newtons)
+- power: HP (Power in horsepower)
+- torque: N⋅m (Torque in Newton-meters)
+- G_combined: g (Combined acceleration in g-forces)
+
+### Brake System
+- brake_pressure_total: psi (Total brake pressure in psi)
+- brake_bias: % (Brake bias percentage)
+- brake_differential: psi/s (Brake pressure rate in psi per second)
+- brake_speed_on: psi/s (Brake application speed in psi per second)
+- brake_speed_off: psi/s (Brake release speed in psi per second)
+
+### Throttle System
+- throttle_differential: %/s (Throttle rate in percentage per second)
+- throttle_speed_on: %/s (Throttle opening speed)
+- throttle_speed_off: %/s (Throttle closing speed)
+
+### Steering System
+- steer_differential: deg/s (Steering rate in degrees per second)
+- steer_speed_on: deg/s (Steering speed on)
+- steer_speed_off: deg/s (Steering speed off)
+
+### Suspension System
+- FL_Damper_travel: mm (Front left damper travel)
+- FL_Damper_speed: mm/s (Front left damper speed)
+- FR_Damper_travel: mm (Front right damper travel)
+- FR_Damper_speed: mm/s (Front right damper speed)
+- RL_Damper_travel: mm (Rear left damper travel)
+- RL_Damper_speed: mm/s (Rear left damper speed)
+- RR_Damper_travel: mm (Rear right damper travel)
+- RR_Damper_speed: mm/s (Rear right damper speed)
+
+### Vehicle Attitude
+- front_roll: mm (Front roll in millimeters)
+- rear_roll: mm (Rear roll in millimeters)
+- left_pitch: mm (Left pitch in millimeters)
+- right_pitch: mm (Right pitch in millimeters)
+- front_yaw: mm (Front yaw in millimeters)
+- rear_yaw: mm (Rear yaw in millimeters)
+- total_yaw: mm (Total yaw in millimeters)
+
+### Grip Factors
+- GF_aero: g (Aerodynamic grip factor)
+- GF_braking: g (Braking grip factor)
+- GF_cornering: g (Cornering grip factor)
+- GF_traction: g (Traction grip factor)
+- GF_overall: g (Overall grip factor)
+
+### Driver Behavior Analysis
+- trail_braking: boolean (Trail braking indicator)
+- steer_throttle: boolean (Steering while throttling)
+- coasting: boolean (Coasting indicator)
+- coasting_off_throttle: boolean (Coasting off throttle)
+- coasting_off_brakes: boolean (Coasting off brakes)
+- crossing: boolean (Brake/throttle crossing)
+- driver_inactive: boolean (Driver inactive indicator)
+- full_throttle: boolean (Full throttle indicator)
+
+### Steering Behavior
+- understeering: boolean (Understeering indicator)
+- oversteering: boolean (Oversteering indicator)
+- neutral_steering: boolean (Neutral steering indicator)
+
+### Engine Monitoring
+- fuel_consumption: L (Total fuel consumption in liters)
+- lambda_error: unitless (Lambda error difference)
+- low_oil_pressure_limit: bar (Oil pressure limit)
+- low_oil_pressure: boolean (Low oil pressure warning)
+- low_fuel_pressure: boolean (Low fuel pressure warning)
+- low_battery_voltage: boolean (Low battery voltage warning)
+- engine_overheating: boolean (Engine overheating warning)
+- oil_overheating: boolean (Oil overheating warning)
+
+### Transmission
+- gear_shifts: count (Number of gear shifts)
+- total_gear_shifts: count (Total gear shifts count)
+
+## CONSTANTS (Used in Calculations)
+- g: m/s² (Gravitational acceleration)
+- rho: kg/m³ (Air density)
+- cl: unitless (Coefficient of lift)
+- cd: unitless (Coefficient of drag)
+- wb: mm (Wheelbase in millimeters)
+- ft: mm (Front track in millimeters)
+- rt: mm (Rear track in millimeters)
+- fa: m² (Frontal area in square meters)
+- wf: N (Front weight in Newtons)
+- wr: N (Rear weight in Newtons)
+- w: N (Vehicle weight in Newtons)
+- steering_ratio: unitless (Steering ratio)
+- rl: mm (Rolling radius in millimeters)
+- gear_reduction: unitless (Gear reduction ratio)
+
+## CONVERSION NOTES
+- All mathematical calculations are performed in SI units internally
+- Input data is automatically converted from original units to SI
+- Output data is converted back to original units for display
+
+## DATA FLOW
+1. **Input**: Raw data in original units (km/h, psi, °C, etc.)
+2. **Processing**: Automatic conversion to SI units (m/s, Pa, K, etc.)
+3. **Calculations**: All mathematical operations in SI units
+4. **Output**: Results converted back to original units for consistency

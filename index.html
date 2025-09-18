@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis @ Horeb Energy Formula UFMG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1d6c69;
+            --primary-dark: #15524e;
+            --secondary-color: #024846;
+            --accent-blue: #0b0080;
+            --accent-purple: #000125;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .landing-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .logo-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container img {
+            max-width: 80px;
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(29, 108, 105, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.1);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+            color: #17a2b8;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="logo-container">
+            <img src="static/logo.png" alt="Horeb Energy Formula UFMG Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='🏎️'; this.parentElement.style.fontSize='3rem';">
+        </div>
+        
+        <h1>Data Analysis @ Horeb Energy Formula UFMG</h1>
+        <p class="subtitle">Advanced telemetry data analysis platform for Formula Student competitions</p>
+        
+        <div class="card">
+            <h3><i class="fas fa-rocket"></i> Application Status</h3>
+            <p>This is a Flask web application that requires a server to run. GitHub Pages serves static files only.</p>
+            
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> How to Access the Application</h5>
+                <p><strong>For Development:</strong></p>
+                <ol class="text-start">
+                    <li>Clone this repository</li>
+                    <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                    <li>Run the application: <code>python flask_app.py</code></li>
+                    <li>Access at: <code>http://localhost:5000</code></li>
+                </ol>
+            </div>
+            
+            <button class="btn btn-primary" onclick="window.open('https://github.com/cachafeli/KPI_v2', '_blank')">
+                <i class="fab fa-github"></i> View on GitHub
+            </button>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <h5>Interactive Visualization</h5>
+                <p>Create dynamic plots with Plotly.js</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-database"></i>
+                <h5>Data Processing</h5>
+                <p>Process raw CSV files from FTManager</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h5>Secure Access</h5>
+                <p>Password-protected with session management</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-download"></i>
+                <h5>Export & Reports</h5>
+                <p>Generate comprehensive analysis reports</p>
+            </div>
+        </div>
+        
+        <div class="alert alert-info">
+            <h5><i class="fas fa-cloud"></i> Deployment Options</h5>
+            <p>For live deployment, consider:</p>
+            <ul class="text-start">
+                <li><strong>Heroku:</strong> Easy deployment with Procfile included</li>
+                <li><strong>Railway:</strong> Connect GitHub repository for auto-deployment</li>
+                <li><strong>PythonAnywhere:</strong> Free hosting for Python applications</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
