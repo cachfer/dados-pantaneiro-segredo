@@ -1,0 +1,16 @@
+
+services:
+  - type: web
+    name: dados-pantaneiro-segredo
+    env: python
+    repo: https://github.com/cachfer/dados-pantaneiro-segredo
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 300 --workers 2
+    plan: free
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: WEBSITE_PASSWORD
+        value: Pantaneiro
+      - key: FLASK_ENV
+        value: production

@@ -14,6 +14,7 @@ import os
 import sys
 import io
 import json
+from dotenv import load_dotenv
 import base64
 from datetime import datetime
 import tempfile
@@ -646,8 +647,44 @@ KEY PERFORMANCE METRICS:
         mimetype='text/plain'
     )
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+load_dotenv()
 
-# Vercel compatibility
-app = app
+# Configurações de produção
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-super-secret-key-change-this')
+WEBSITE_PASSWORD = os.getenv('WEBSITE_PASSWORD', 'pantaneiro')
+
+# Security headers para produção
+@app.after_request
+def after_request(response):
+    # Security headers
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Content-Security-Policy'] = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.plot.ly data:"
+    
+    # Remove server identification
+    response.headers.pop('Server', None)
+    response.headers.pop('X-Powered-By', None)
+    
+    # Cache control for static resources
+    if request.endpoint == 'static':
+        response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+    else:
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    
+    # Content type with charset
+    if response.content_type and 'text/html' in response.content_type:
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    elif response.content_type and 'application/json' in response.content_type:
+        response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    
+    return response
+
+if __name__ == '__main__':
+    # Para desenvolvimento local
+    app.run(debug=True, host='0.0.0.0', port=5000)
+else:
+    application = app

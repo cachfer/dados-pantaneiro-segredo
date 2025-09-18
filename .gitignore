@@ -118,7 +118,7 @@ celerybeat.pid
 # mypy
 .mypy_cache/
 .dmypy.json
-dmypy.json
+dmyson.json
 
 # Pyre type checker
 .pyre/
